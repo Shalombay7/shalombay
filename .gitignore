@@ -2,3 +2,14 @@
 .env
 .env
 .env
+node_modules
+# Node.js
+node_modules/
+package-lock.json
+
+# Environment variables
+server/.env
+client/.env
+
+# MongoDB backups
+backups/
