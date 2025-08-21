@@ -84,7 +84,7 @@ function App() {
               <h5>Contact</h5>
               <p>
                 Email: support@healthshop.com<br />
-                Phone: (123) 456-7890<br />
+                Phone: (+233) 054 244 7318<br />
                 Address: 123 Wellness St, Health City
               </p>
             </div>

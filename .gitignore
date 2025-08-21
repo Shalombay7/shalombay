@@ -9,3 +9,7 @@ client/.env
 
 # MongoDB backups
 backups/
+.vercel
+client/build/
+client/node_modules/
+server/node_modules/
