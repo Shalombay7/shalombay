@@ -14,21 +14,22 @@ function Home() {
   const userId = localStorage.getItem('userId');
 
   const defaultImage = 'https://placehold.co/200x200?text=No+Image';
+  const API_URL = process.env.REACT_APP_API_URL || '';
 
   useEffect(() => {
-    axios.get('http://localhost:5009/api/products')
+    axios.get(`${API_URL}/api/products/featured`)
       .then(response => {
         setProducts(response.data);
         setFilteredProducts(response.data);
         setLoading(false);
       })
       .catch(error => {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching featured products:', error);
         setError(error.response ? error.response.data.message : 'Network error: Unable to connect to the server.');
         setLoading(false);
       });
 
-    axios.get('http://localhost:5009/api/ads')
+    axios.get(`${API_URL}/api/ads`)
       .then(response => setAds(response.data))
       .catch(error => console.error('Error fetching ads:', error));
   }, []);
@@ -58,7 +59,7 @@ function Home() {
       return;
     }
     try {
-      await axios.post(`http://localhost:5009/api/cart/${userId}`, {
+      await axios.post(`${API_URL}/api/cart/${userId}`, {
         productId,
         quantity: 1
       });
