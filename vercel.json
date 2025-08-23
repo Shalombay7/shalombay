@@ -8,7 +8,8 @@
     },
     {
       "src": "server/server.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": { "includeFiles": ["server/**"] }
     }
   ],
   "routes": [
@@ -21,5 +22,8 @@
       "dest": "client/build/$1",
       "headers": { "Cache-Control": "no-cache" }
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
