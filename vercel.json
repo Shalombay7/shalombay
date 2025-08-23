@@ -9,17 +9,23 @@
     {
       "src": "server/server.js",
       "use": "@vercel/node",
-      "config": { "includeFiles": ["server/**"] }
+      "config": {
+        "includeFiles": [
+          "server/**",
+          "server/package.json",
+          "server/node_modules/**"
+        ]
+      }
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "server/server.js"
+      "dest": "/server/server.js"
     },
     {
       "src": "/(.*)",
-      "dest": "client/build/$1",
+      "dest": "/client/build/$1",
       "headers": { "Cache-Control": "no-cache" }
     }
   ],
