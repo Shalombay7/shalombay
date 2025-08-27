@@ -15,7 +15,7 @@ function Cart() {
       setLoading(false);
       return;
     }
-    axios.get(`http://localhost:5009/api/cart/${userId}`)
+    axios.get(`${process.env.REACT_APP_API_URL}/api/cart/${userId}`)
       .then(response => {
         setCart(response.data);
         setLoading(false);
@@ -34,7 +34,7 @@ function Cart() {
       return;
     }
     try {
-      await axios.delete(`http://localhost:5009/api/cart/${userId}/${productId}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/cart/${userId}/${productId}`);
       setCart(prevCart => ({
         ...prevCart,
         items: prevCart.items.filter(item => item.productId._id !== productId),
@@ -60,7 +60,7 @@ function Cart() {
     }
     if (quantity < 1) return;
     try {
-      await axios.put(`http://localhost:5009/api/cart/${userId}`, {
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/cart/${userId}`, {
         productId,
         quantity
       });
@@ -82,6 +82,11 @@ function Cart() {
       console.error('Error updating cart:', error);
       toast.error('Failed to update cart.');
     }
+  };
+
+  const getWhatsAppMessage = () => {
+    const items = cart.items.map(item => `${item.quantity}x ${item.productId.name} ($${item.productId.price.toFixed(2)})`).join(', ');
+    return `Hello, I'd like to discuss my order: ${items}. Total: $${cart.total.toFixed(2)}`;
   };
 
   return (
@@ -161,7 +166,14 @@ function Cart() {
           </div>
           <div className="text-end">
             <h4>Total: ${cart.total.toFixed(2)}</h4>
-            <Link to="/checkout" className="btn btn-primary">Proceed to Checkout</Link>
+            <a
+              href={`https://api.whatsapp.com/send?phone=233542447318&text=${encodeURIComponent(getWhatsAppMessage())}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-success"
+            >
+              Discuss Order on WhatsApp
+            </a>
           </div>
         </div>
       )}

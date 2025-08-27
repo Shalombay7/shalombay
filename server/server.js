@@ -1,25 +1,25 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const path = require('path');
-require('dotenv').config(); // Ensure dotenv is included
+const dotenv = require('dotenv');
+const productRoutes = require('./routes/products');
+const cartRoutes = require('./routes/cart');
+const authRoutes = require('./routes/auth');
 
+dotenv.config();
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use('/images', express.static(path.join(__dirname, 'public/images')));
+app.use(express.static('public'));
 
-// Routes
-app.use('/api/products', require('./routes/products'));
-app.use('/api/ads', require('./routes/ads'));
-app.use('/api/cart', require('./routes/cart'));
+app.use('/api/products', productRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/auth', authRoutes);
 
-// MongoDB connection
-console.log('MONGO_URI:', process.env.MONGO_URI);
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err.message, '\nFull error:', err));
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
-const PORT = process.env.PORT || 3000; // Use 3001
+const PORT = process.env.PORT || 5009;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
