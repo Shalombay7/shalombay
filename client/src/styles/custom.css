@@ -1,1 +1,49 @@
-/* Custom styles */
+/* Footer Styles */
+.footer {
+  background-color: #343a40;
+  padding: 40px 0;
+  color: #fff;
+}
+.footer h5 {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+.footer a:hover {
+  color: #28a745;
+  text-decoration: underline;
+}
+.premium-tag {
+  background: linear-gradient(45deg, #28a745, #17a2b8);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  display: inline-block;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+/* Navbar Styles */
+.navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.nav-link {
+  transition: color 0.3s ease;
+}
+.nav-link:hover {
+  color: #28a745 !important;
+}
+.dropdown-menu {
+  background-color: #007bff;
+  border: none;
+}
+.dropdown-item {
+  color: #fff;
+}
+.dropdown-item:hover {
+  background-color: #28a745;
+  color: #fff;
+}

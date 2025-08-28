@@ -1,47 +1,39 @@
-import React, { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState } from "react";
+import axios from "axios";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "../styles/custom.css";
 
 function ChangePassword() {
-  const navigate = useNavigate();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const [searchParams] = useSearchParams();
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
-  const token = searchParams.get('token');
+  const navigate = useNavigate();
+  const token = searchParams.get("token");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      setError('Passwords do not match.');
-      toast.error('Passwords do not match.');
+      setError("Passwords do not match.");
+      toast.error("Passwords do not match.");
       return;
     }
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/reset-password`, {
-        token,
-        password
-      });
-      setMessage('Password changed successfully!');
-      setError('');
-      toast.success('Password changed successfully!');
-      setTimeout(() => navigate('/login'), 2000);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/reset-password`, { token, password });
+      setMessage(response.data.message);
+      toast.success("Password reset successfully!");
+      setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
-      console.error('Change password error:', err);
-      setError(err.response?.data?.message || 'Failed to change password.');
-      setMessage('');
-      toast.error(err.response?.data?.message || 'Failed to change password.');
+      setError(err.response?.data?.message || "Failed to reset password.");
+      toast.error("Failed to reset password.");
     }
   };
 
   return (
     <div className="container mt-5">
       <h2>Change Password</h2>
-      {message && <div className="alert alert-success">{message}</div>}
-      {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="password" className="form-label">New Password</label>
@@ -65,8 +57,10 @@ function ChangePassword() {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary">Change Password</button>
+        <button type="submit" className="btn btn-primary">Reset Password</button>
       </form>
+      {message && <div className="alert alert-success mt-3">{message}</div>}
+      {error && <div className="alert alert-danger mt-3">{error}</div>}
     </div>
   );
 }
