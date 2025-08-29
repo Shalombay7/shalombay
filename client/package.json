@@ -8,27 +8,35 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "@babel/runtime": "^7.18.0",
-    "@stripe/react-stripe-js": "^2.1.0",
-    "@stripe/stripe-js": "^1.46.0",
-    "axios": "^1.11.0",
-    "bootstrap": "^5.3.7",
-    "bootstrap-icons": "^1.13.1",
+    "@babel/runtime": "^7.24.0",
+    "@stripe/react-stripe-js": "^2.7.3",
+    "@stripe/stripe-js": "^4.5.0",
+    "axios": "^1.7.7",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "lodash": "^4.17.21",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.10.0",
+    "react-router-dom": "^6.26.2",
     "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "react-scripts": "5.0.1",
-    "svgo": "2.8.0",
-    "postcss": "8.4.31",
-    "webpack-dev-server": "5.2.1"
+    "@svgr/webpack": "^8.1.0",
+    "@svgr/plugin-svgo": "^8.1.0",
+    "svgo": "^3.3.2",
+    "postcss": "^8.4.47",
+    "resolve-url-loader": "^5.0.0",
+    "webpack-dev-server": "^5.2.1"
   },
   "resolutions": {
-    "nth-check": "^2.0.1",
-    "postcss": "^8.4.31",
+    "nth-check": "^2.1.1",
+    "css-select": "^5.1.0",
+    "@svgr/plugin-svgo": "^8.1.0",
+    "@svgr/webpack": "^8.1.0",
+    "svgo": "^3.3.2",
+    "postcss": "^8.4.47",
+    "resolve-url-loader": "^5.0.0",
     "webpack-dev-server": "^5.2.1"
   },
   "browserslist": {
