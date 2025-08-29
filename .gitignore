@@ -19,3 +19,4 @@ client/build/
 # Node modules in subdirectories
 client/node_modules/
 server/node_modules/
+server/public/images/*

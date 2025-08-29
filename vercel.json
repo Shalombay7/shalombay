@@ -8,17 +8,7 @@
     },
     {
       "src": "server/server.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "server/server.js",
-          "server/routes/**",
-          "server/models/**",
-          "server/public/**",
-          "server/package.json",
-          "server/node_modules/**"
-        ]
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -28,16 +18,10 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/client/build/$1",
-      "headers": { "Cache-Control": "no-cache" }
+      "dest": "/client/build/"
     }
   ],
   "env": {
-    "NODE_ENV": "production",
-    "MONGO_URI": "mongodb+srv://shalombay:Dhal789123%24%23%40@cluster0.8nfyzqh.mongodb.net/shalombay?retryWrites=true&w=majority",
-    "JWT_SECRET": "your_jwt_secret",
-    "EMAIL_USER": "your_email@gmail.com",
-    "EMAIL_PASS": "your_email_password",
-    "CLIENT_URL": "https://shalombay.vercel.app"
+    "NODE_ENV": "production"
   }
 }
