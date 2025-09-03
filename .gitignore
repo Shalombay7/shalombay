@@ -1,22 +1,9 @@
-# Node.js dependencies
 node_modules/
 package-lock.json
-
-# Environment variables
 .env
 server/.env
 client/.env
-
-# MongoDB backups
 backups/
-
-# Vercel
-.vercel
-
-# Build output
 client/build/
-
-# Node modules in subdirectories
 client/node_modules/
 server/node_modules/
-server/public/images/*
