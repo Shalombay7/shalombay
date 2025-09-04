@@ -8,3 +8,5 @@ client/build/
 client/node_modules/
 server/node_modules/
 client/node_modules/.cache/
+server/public/images/*
+server/public/images/*
