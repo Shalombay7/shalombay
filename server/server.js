@@ -30,15 +30,15 @@ app.use(cors({
 
 app.use(express.json());
 
-// API routes (prioritize these before static files)
+// API routes (prioritize these)
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/ads', (req, res) => {
-  res.json([]); // Placeholder for ads - return empty array to avoid HTML fallback
+  res.json([]); // Return empty array as a placeholder
 });
 
-// Static files
+// Static files and React app
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, '../client/build')));
 
