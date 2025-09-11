@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 function Home() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [ads, setAds] = useState([]);
+  const [ads, setAds] = useState([]); // Initialize as empty array
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [category, setCategory] = useState('All');
@@ -17,25 +17,47 @@ function Home() {
   const API_URL = process.env.REACT_APP_API_URL || '';
 
   useEffect(() => {
-    axios.get(`${API_URL}/api/products/featured`)
+    axios
+      .get(`${API_URL}/api/products/featured`)
       .then(response => {
-        setProducts(response.data);
-        setFilteredProducts(response.data);
+        const data = response.data;
+        if (Array.isArray(data)) {
+          setProducts(data);
+          setFilteredProducts(data);
+        } else {
+          console.warn('Unexpected response format for featured products:', data);
+          setProducts([]);
+          setFilteredProducts([]);
+        }
         setLoading(false);
       })
       .catch(error => {
         console.error('Error fetching featured products:', error);
         setError(error.response ? error.response.data.message : 'Network error: Unable to connect to the server.');
+        setProducts([]);
+        setFilteredProducts([]);
         setLoading(false);
       });
 
-    axios.get(`${API_URL}/api/ads`)
-      .then(response => setAds(response.data))
-      .catch(error => console.error('Error fetching ads:', error));
+    axios
+      .get(`${API_URL}/api/ads`)
+      .then(response => {
+        const data = response.data;
+        if (Array.isArray(data)) {
+          setAds(data);
+        } else {
+          console.warn('Unexpected response format for ads:', data);
+          setAds([]); // Default to empty array if not an array
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching ads:', error);
+        setAds([]); // Fallback on error
+      });
   }, []);
 
   useEffect(() => {
-    let filtered = products;
+    let filtered = [...products];
     if (category !== 'All') {
       filtered = filtered.filter(product => product.category === category);
     }
@@ -93,10 +115,10 @@ function Home() {
                     <img
                       src={ad.imageUrl || defaultImage}
                       className="img-fluid rounded"
-                      alt={ad.title}
+                      alt={ad.title || 'Special Offer'}
                       onError={(e) => (e.target.src = defaultImage)}
                     />
-                    <p className="mt-2 text-center">{ad.description}</p>
+                    <p className="mt-2 text-center">{ad.description || 'No description available'}</p>
                   </div>
                 ))
               ) : (
@@ -144,7 +166,7 @@ function Home() {
         <div className="alert alert-danger" role="alert">
           {error}
         </div>
-      ) : filteredProducts.length === 0 ? (
+      ) : !Array.isArray(filteredProducts) || filteredProducts.length === 0 ? (
         <p>No products found.</p>
       ) : (
         <div className="row" aria-labelledby="featured-products">
