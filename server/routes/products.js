@@ -9,24 +9,25 @@ router.get('/', async (req, res) => {
     res.json(products);
   } catch (error) {
     console.error('Error fetching products:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
 // Get featured products
-const mongoose = require('mongoose');
-
-const productSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  description: { type: String }, // Optional for now
-  price: { type: Number, required: true },
-  category: { type: String }, // Optional for now
-  stock: { type: Number, required: true },
-  imageUrl: { type: String },
-  isFeatured: { type: Boolean, default: false } // Add this for featured filtering
+router.get('/featured', async (req, res) => {
+  try {
+    console.log('Fetching featured products...');
+    const featuredProducts = await Product.find({ isFeatured: true }).limit(8);
+    console.log('Featured products found:', featuredProducts);
+    if (featuredProducts.length === 0) {
+      return res.status(404).json({ message: 'No featured products found' });
+    }
+    res.json(featuredProducts);
+  } catch (error) {
+    console.error('Error fetching featured products:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 });
-
-module.exports = mongoose.model('Product', productSchema);
 
 // Create a new product
 router.post('/', async (req, res) => {
@@ -37,7 +38,7 @@ router.post('/', async (req, res) => {
     res.status(201).json(product);
   } catch (error) {
     console.error('Error creating product:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
@@ -49,7 +50,7 @@ router.get('/:id', async (req, res) => {
     res.json(product);
   } catch (error) {
     console.error('Error fetching product:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
