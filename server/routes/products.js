@@ -14,20 +14,19 @@ router.get('/', async (req, res) => {
 });
 
 // Get featured products
-router.get('/featured', async (req, res) => {
-  try {
-    console.log('Fetching featured products...');
-    const featuredProducts = await Product.find({ isFeatured: true });
-    console.log('Featured products found:', featuredProducts);
-    if (featuredProducts.length === 0) {
-      return res.status(404).json({ message: 'No featured products found' });
-    }
-    res.json(featuredProducts);
-  } catch (error) {
-    console.error('Error fetching featured products:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
+const mongoose = require('mongoose');
+
+const productSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  description: { type: String }, // Optional for now
+  price: { type: Number, required: true },
+  category: { type: String }, // Optional for now
+  stock: { type: Number, required: true },
+  imageUrl: { type: String },
+  isFeatured: { type: Boolean, default: false } // Add this for featured filtering
 });
+
+module.exports = mongoose.model('Product', productSchema);
 
 // Create a new product
 router.post('/', async (req, res) => {
