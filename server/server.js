@@ -66,9 +66,3 @@ mongoose.connect(process.env.MONGODB_URI)
 
 const PORT = process.env.PORT || 5009;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-
-cd ~/OneDrive/Desktop/shalombay
-git add .
-git commit -m "Verify and finalize server.js with correct /api/ads route"
-git push origin main
