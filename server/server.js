@@ -12,6 +12,14 @@ dotenv.config();
 
 const app = express();
 
+// Debug log to confirm env is loaded
+if (!process.env.MONGODB_URI) {
+  console.error("❌ MONGODB_URI is missing. Check your .env file or Render env variables.");
+  process.exit(1);
+} else {
+  console.log("✅ MONGODB_URI loaded");
+}
+
 // CORS configuration
 const allowedOrigins = [
   'http://localhost:3000',
@@ -30,12 +38,12 @@ app.use(cors({
 
 app.use(express.json());
 
-// API routes (prioritize these before static files)
+// API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/ads', (req, res) => {
-  res.json([]); // Placeholder for ads - return empty array to avoid HTML fallback
+  res.json([]); // Placeholder for ads
 });
 
 // Static files
@@ -57,12 +65,15 @@ app.use((err, req, res, next) => {
 });
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('✅ Connected to MongoDB'))
   .catch(err => {
-    console.error('MongoDB connection error:', err);
+    console.error('❌ MongoDB connection error:', err.message);
     process.exit(1);
   });
 
 const PORT = process.env.PORT || 5009;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
