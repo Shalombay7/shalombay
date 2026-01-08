@@ -2,9 +2,9 @@
   "name": "shalombay",
   "version": "1.0.0",
   "scripts": {
-    "build": "cd server && npm install && cd ../client && npm install && npm run build",
-    "start": "cd server && node server.js",
-    "install": "cd client && npm install && cd ../server && npm install"
+    "render-build": "npm install --prefix server && npm install --prefix client && npm run build --prefix client",
+    "start": "npm run start --prefix server",
+    "install": "npm install --prefix client && npm install --prefix server"
   },
   "dependencies": {},
   "devDependencies": {}
