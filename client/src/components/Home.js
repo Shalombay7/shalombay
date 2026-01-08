@@ -91,8 +91,8 @@ function Home() {
   return (
     <div className="container mt-4" role="main">
       <div className="p-5 mb-4 bg-primary text-white rounded-3">
-        <h1 className="display-4">Welcome to Health Shop</h1>
-        <p className="lead">Your one-stop shop for vitamins and supplements.</p>
+        <h1 className="display-4">Welcome to Shalom Bay</h1>
+        <p className="lead">Your one-stop shop for quality products.</p>
         <Link to="/cart" className="btn btn-light btn-lg">
           <i className="bi bi-cart"></i> Shop Now
         </Link>
