@@ -6,6 +6,11 @@
     "start": "cd server && npm install && node server.js",
     "install": "cd client && npm install && cd ../server && npm install"
   },
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "dependencies": {},
   "devDependencies": {}
 }
+
