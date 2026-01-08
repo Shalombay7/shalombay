@@ -2,18 +2,7 @@ const express = require('express');
 const Product = require('../models/Product');
 const router = express.Router();
 
-// Get all products
-router.get('/', async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.json(products);
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-});
-
-// Get featured products
+// Get featured products (MUST come before /:id route)
 router.get('/featured', async (req, res) => {
   try {
     console.log('Fetching featured products...');
@@ -22,6 +11,17 @@ router.get('/featured', async (req, res) => {
     res.json(featuredProducts);
   } catch (error) {
     console.error('Error fetching featured products:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Get all products
+router.get('/', async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (error) {
+    console.error('Error fetching products:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Get product by ID
+// Get product by ID (catch-all - MUST come last)
 router.get('/:id', async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
