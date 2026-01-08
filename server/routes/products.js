@@ -5,12 +5,13 @@ const router = express.Router();
 // Get featured products (MUST come before /:id route)
 router.get('/featured', async (req, res) => {
   try {
-    console.log('Fetching featured products...');
+    console.log('🔍 Fetching featured products...');
+    console.log('📦 MongoDB connected:', !!Product.collection.conn);
     const featuredProducts = await Product.find({ isFeatured: true }).limit(8);
-    console.log('Featured products found:', featuredProducts.length);
+    console.log('✅ Featured products found:', featuredProducts.length, featuredProducts.map(p => p.name));
     res.json(featuredProducts);
   } catch (error) {
-    console.error('Error fetching featured products:', error);
+    console.error('❌ Error fetching featured products:', error.message, error.stack);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
