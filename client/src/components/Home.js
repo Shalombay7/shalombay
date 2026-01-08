@@ -9,7 +9,6 @@ function Home() {
   const [ads, setAds] = useState([]); // Initialize as empty array
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [category, setCategory] = useState('All');
   const [search, setSearch] = useState('');
   const userId = localStorage.getItem('userId');
 
@@ -58,16 +57,13 @@ function Home() {
 
   useEffect(() => {
     let filtered = [...products];
-    if (category !== 'All') {
-      filtered = filtered.filter(product => product.category === category);
-    }
     if (search) {
       filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(search.toLowerCase())
       );
     }
     setFilteredProducts(filtered);
-  }, [category, search, products]);
+  }, [search, products]);
 
   const addToCart = async (productId) => {
     if (!userId) {
@@ -130,7 +126,7 @@ function Home() {
       </div>
 
       <div className="row mb-4">
-        <div className="col-md-6">
+        <div className="col-12">
           <input
             type="text"
             className="form-control"
@@ -139,19 +135,6 @@ function Home() {
             onChange={e => setSearch(e.target.value)}
             aria-label="Search products"
           />
-        </div>
-        <div className="col-md-6">
-          <select
-            className="form-select"
-            value={category}
-            onChange={e => setCategory(e.target.value)}
-            aria-label="Select category"
-          >
-            <option value="All">All Categories</option>
-            <option value="Vitamins">Vitamins</option>
-            <option value="Protein">Protein</option>
-            <option value="Supplements">Supplements</option>
-          </select>
         </div>
       </div>
 
