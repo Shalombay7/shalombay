@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 // Load environment variables first
 dotenv.config();
@@ -39,6 +40,7 @@ app.use(cors({
 // Middleware
 app.use(express.json({ limit: '10mb' })); // Add size limit
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -48,10 +50,12 @@ app.get('/health', (req, res) => {
 // API routes - these should come BEFORE static file serving
 try {
   const authRoutes = require('./routes/auth');
+  const adminRoutes = require('./routes/admin');
   const productRoutes = require('./routes/products');
   const cartRoutes = require('./routes/cart');
   
   app.use('/api/auth', authRoutes);
+  app.use('/api/admin', adminRoutes);
   app.use('/api/products', productRoutes);
   app.use('/api/cart', cartRoutes);
 } catch (error) {
