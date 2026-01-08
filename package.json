@@ -2,15 +2,10 @@
   "name": "shalombay",
   "version": "1.0.0",
   "scripts": {
-    "build": "cd client && npm install && npm run build",
-    "start": "cd server && npm install && node server.js",
+    "build": "cd client && npm run build",
+    "start": "cd server && node server.js",
     "install": "cd client && npm install && cd ../server && npm install"
   },
-  "workspaces": [
-    "client",
-    "server"
-  ],
   "dependencies": {},
   "devDependencies": {}
 }
-
