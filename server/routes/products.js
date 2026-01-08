@@ -18,10 +18,7 @@ router.get('/featured', async (req, res) => {
   try {
     console.log('Fetching featured products...');
     const featuredProducts = await Product.find({ isFeatured: true }).limit(8);
-    console.log('Featured products found:', featuredProducts);
-    if (featuredProducts.length === 0) {
-      return res.status(404).json({ message: 'No featured products found' });
-    }
+    console.log('Featured products found:', featuredProducts.length);
     res.json(featuredProducts);
   } catch (error) {
     console.error('Error fetching featured products:', error);

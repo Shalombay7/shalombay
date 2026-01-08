@@ -14,6 +14,7 @@ const products = [
     status: 'In Store',
     price: 29.99,
     stock: 50,
+    isFeatured: true,
   },
   {
     name: 'Detox Herbal Tea',
@@ -22,6 +23,7 @@ const products = [
     status: 'Sold Out',
     price: 12.99,
     stock: 0,
+    isFeatured: true,
   },
   {
     name: 'Omega-3 Wellness Capsules',
@@ -30,6 +32,7 @@ const products = [
     status: 'In Store',
     price: 24.99,
     stock: 75,
+    isFeatured: true,
   },
   {
     name: 'Natural Blood Tonic',
