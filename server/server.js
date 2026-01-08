@@ -22,13 +22,16 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
   'http://localhost:5000',
-  'https://shalombay.onrender.com'
+  'https://shalombay.onrender.com',
+  /vercel\.app$/ // Allow all Vercel deployments
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (mobile apps, Postman, etc.)
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    if (!origin) {
+      callback(null, true);
+    } else if (allowedOrigins.some(o => o instanceof RegExp ? o.test(origin) : o === origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
