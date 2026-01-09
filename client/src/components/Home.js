@@ -10,7 +10,6 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState('');
-  const userId = localStorage.getItem('userId');
 
   const defaultImage = 'https://placehold.co/200x200?text=No+Image';
   const API_URL = process.env.REACT_APP_API_URL || '';
@@ -65,37 +64,21 @@ function Home() {
     setFilteredProducts(filtered);
   }, [search, products]);
 
-  const addToCart = async (productId) => {
-    if (!userId) {
-      toast.error('Please log in to add items to your cart.');
-      window.location.href = '/login';
-      return;
-    }
-    const product = products.find(p => p._id === productId);
-    if (product.stock === 0) {
-      toast.error('This product is out of stock.');
-      return;
-    }
-    try {
-      await axios.post(`${API_URL}/api/cart/${userId}`, {
-        productId,
-        quantity: 1
-      });
-      toast.success('Added to cart!');
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      toast.error('Failed to add to cart.');
-    }
+  const orderViaWhatsApp = (product) => {
+    const phoneNumber = '233542447318';
+    const message = `Hello, I would like to order:\n\nProduct: ${product.name}\nPrice: $${product.price.toFixed(2)}\n\nPlease confirm availability.`;
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
   };
 
   return (
     <div className="container mt-4" role="main">
       <div className="p-5 mb-4 bg-primary text-white rounded-3">
         <h1 className="display-4">Welcome to Shalom Bay</h1>
-        <p className="lead">Your one-stop shop for quality products.</p>
-        <Link to="/cart" className="btn btn-light btn-lg">
-          <i className="bi bi-cart"></i> Shop Now
-        </Link>
+        <p className="lead">Your one-stop shop for quality products. Reach us on WhatsApp: +233542447318</p>
+        <a href="#featured-products" className="btn btn-light btn-lg">
+          <i className="bi bi-bag"></i> Shop Now
+        </a>
       </div>
 
       <div className="mb-4">
@@ -173,12 +156,12 @@ function Home() {
                     {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
                   </p>
                   <button
-                    className="btn btn-primary w-100"
-                    onClick={() => addToCart(product._id)}
+                    className="btn btn-success w-100"
+                    onClick={() => orderViaWhatsApp(product)}
                     disabled={product.stock === 0}
                     aria-disabled={product.stock === 0}
                   >
-                    <i className="bi bi-cart-plus"></i> Add to Cart
+                    <i className="bi bi-whatsapp"></i> Order via WhatsApp
                   </button>
                 </div>
               </div>
