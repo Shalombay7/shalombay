@@ -1,15 +1,8 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../styles/custom.css";
 
 function Navbar() {
-  const navigate = useNavigate();
-  const handleLogout = () => {
-    // Add logout logic here (e.g., clear localStorage)
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
-
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
       <div className="container">
@@ -35,36 +28,6 @@ function Navbar() {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/about">About</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/cart">Cart</Link>
-            </li>
-          </ul>
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item dropdown">
-              <a
-                className="nav-link dropdown-toggle"
-                href="#"
-                id="navbarDropdown"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Account
-              </a>
-              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li>
-                  <Link className="dropdown-item" to="/profile">Profile</Link>
-                </li>
-                <li>
-                  <button className="dropdown-item" onClick={handleLogout}>
-                    Logout
-                  </button>
-                </li>
-              </ul>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/login">Login</Link>
             </li>
           </ul>
         </div>

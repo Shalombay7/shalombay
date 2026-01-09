@@ -12,7 +12,6 @@ function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
   const [rating, setRating] = useState(1);
   const [comment, setComment] = useState('');
-  const userId = localStorage.getItem('userId');
   const defaultImage = 'https://placehold.co/400x400?text=No+Image';
 
   useEffect(() => {
@@ -38,30 +37,16 @@ function ProductDetails() {
       .catch(error => console.error('Error fetching reviews:', error));
   }, [id]);
 
-  const addToCart = async () => {
-    if (!userId) {
-      toast.error('Please log in to add items to your cart.');
-      window.location.href = '/login';
-      return;
-    }
-    if (product.stock < quantity) {
-      toast.error(`Only ${product.stock} items in stock.`);
-      return;
-    }
-    try {
-      await axios.post(`http://localhost:5009/api/cart/${userId}`, {
-        productId: id,
-        quantity
-      });
-      toast.success('Added to cart!');
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      toast.error('Failed to add to cart.');
-    }
+  const orderViaWhatsApp = () => {
+    const phoneNumber = '233542447318';
+    const message = `Hello, I would like to order:\n\nProduct: ${product.name}\nPrice: $${product.price.toFixed(2)}\nQuantity: ${quantity}\n\nPlease confirm availability.`;
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
   };
 
   const submitReview = async (e) => {
     e.preventDefault();
+    const userId = localStorage.getItem('userId');
     if (!userId) {
       toast.error('Please log in to submit a review.');
       window.location.href = '/login';
@@ -132,12 +117,12 @@ function ProductDetails() {
                 </small>
               </div>
               <button
-                className="btn btn-primary"
-                onClick={addToCart}
+                className="btn btn-success"
+                onClick={orderViaWhatsApp}
                 disabled={product.stock === 0}
                 aria-disabled={product.stock === 0}
               >
-                <i className="bi bi-cart-plus"></i> Add to Cart
+                <i className="bi bi-whatsapp"></i> Order via WhatsApp
               </button>
               <Link to="/" className="btn btn-secondary ms-2">Back to Home</Link>
             </div>

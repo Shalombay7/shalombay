@@ -75,9 +75,7 @@ app.use('/api/ads', (req, res) => {
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Serve React app static files
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
-}
+app.use(express.static(path.join(__dirname, '../client/build')));
 
 // API 404 handler - for unmatched API routes
 app.use('/api/*', (req, res) => {
@@ -85,11 +83,9 @@ app.use('/api/*', (req, res) => {
 });
 
 // Catch-all handler - serve React app (only for non-API routes)
-if (process.env.NODE_ENV === 'production') {
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-  });
-}
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
