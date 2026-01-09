@@ -1,14 +1,13 @@
+# Dependencies
 node_modules/
-package-lock.json
+
+# Environment variables
 .env
-.env.local
-.env*.local
-server/.env
-client/.env
-backups/
+
+# Build outputs
 client/build/
-client/node_modules/
-server/node_modules/
-client/node_modules/.cache/
-server/public/images/*
-server/public/images/*
+dist/
+
+# System files
+.DS_Store
+Thumbs.db

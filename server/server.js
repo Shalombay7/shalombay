@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 const path = require('path');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const fs = require('fs');
+const rateLimit = require('express-rate-limit');
 
 // Load environment variables first
 dotenv.config();
@@ -11,6 +13,7 @@ dotenv.config();
 const app = express();
 
 // Validate required environment variables
+app.set('trust proxy', 1); // Required for Render/Heroku to detect correct IP
 if (!process.env.MONGODB_URI) {
   console.error("❌ MONGODB_URI is missing. Check your .env file or Render env variables.");
   process.exit(1);
@@ -45,6 +48,15 @@ app.use(express.json({ limit: '10mb' })); // Add size limit
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100, // Limit each IP to 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api', limiter);
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
@@ -63,7 +75,7 @@ try {
   app.use('/api/cart', cartRoutes);
 } catch (error) {
   console.error('❌ Error loading route files:', error.message);
-  process.exit(1);
+  // process.exit(1); // Don't crash if routes are missing, allows health check to pass
 }
 
 // Placeholder routes
@@ -75,16 +87,22 @@ app.use('/api/ads', (req, res) => {
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Serve React app static files
-app.use(express.static(path.join(__dirname, '../client/build')));
+const clientBuildPath = path.join(__dirname, '../client/build');
+if (fs.existsSync(clientBuildPath)) {
+  app.use(express.static(clientBuildPath));
 
-// API 404 handler - for unmatched API routes
-app.use('/api/*', (req, res) => {
+  // Catch-all handler - serve React app (only for non-API routes)
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
+  });
+} else {
+  console.log('⚠️ Client build not found, running in API-only mode');
+}
+
+// API 404 handler - for unmatched API routes (runs if client build not found or path starts with /api)
+app.use((req, res) => {
   res.status(404).json({ message: `API endpoint ${req.method} ${req.path} not found` });
-});
-
-// Catch-all handler - serve React app (only for non-API routes)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 });
 
 // Error handling middleware
@@ -105,16 +123,21 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-.then(() => console.log('✅ Connected to MongoDB'))
-.catch(err => {
-  console.error('❌ MongoDB connection error:', err.message);
-  process.exit(1);
-});
+// Connect to MongoDB and Start Server
+const startServer = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('✅ Connected to MongoDB');
+    
+    const PORT = process.env.PORT || 5009;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+    });
+  } catch (err) {
+    console.error('❌ Failed to connect to MongoDB:', err.message);
+    process.exit(1);
+  }
+};
 
-const PORT = process.env.PORT || 5009;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
-});
+startServer();

@@ -6,8 +6,7 @@ const router = express.Router();
 router.get('/featured', async (req, res) => {
   try {
     console.log('🔍 Fetching featured products...');
-    console.log('📦 MongoDB connected:', !!Product.collection.conn);
-    const featuredProducts = await Product.find({ isFeatured: true }).limit(8);
+    const featuredProducts = await Product.find({ isFeatured: true }).limit(8).lean();
     console.log('✅ Featured products found:', featuredProducts.length, featuredProducts.map(p => p.name));
     res.json(featuredProducts);
   } catch (error) {
