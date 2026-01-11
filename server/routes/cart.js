@@ -2,6 +2,18 @@ const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
 const Product = require('../models/Product');
+const auth = require('../middleware/auth');
+
+// Get logged-in user's cart (uses token)
+router.get('/', auth, async (req, res) => {
+  try {
+    const cart = await Order.findOne({ userId: req.user.userId, status: 'cart' })
+      .populate('items.productId');
+    res.json(cart || { items: [], total: 0 });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 // Get user's cart
 router.get('/:userId', async (req, res) => {

@@ -1,10 +1,16 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const Product = require('../models/Product');
 const router = express.Router();
 
 // Get featured products (MUST come before /:id route)
 router.get('/featured', async (req, res) => {
   try {
+    // Check DB connection status (1 = connected)
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ message: 'Database not connected', state: mongoose.connection.readyState });
+    }
+
     console.log('🔍 Fetching featured products...');
     let featuredProducts = await Product.find({ isFeatured: true }).limit(8).lean();
     

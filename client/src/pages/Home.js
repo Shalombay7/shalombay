@@ -23,7 +23,7 @@ function Home() {
       })
       .catch(error => {
         console.error('Error fetching products:', error);
-        setError(error.response ? error.response.data.message : 'Network error: Unable to connect to the server.');
+        setError(error.response?.data?.message || error.message || 'Network error');
         setLoading(false);
       });
 
