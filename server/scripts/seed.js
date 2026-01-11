@@ -87,6 +87,11 @@ const seedDB = async () => {
       throw new Error('MONGODB_URI is undefined. Check your .env file location.');
     }
 
+    // Log masked URI for debugging
+    const uri = process.env.MONGODB_URI;
+    const maskedUri = uri.replace(/:([^:@]+)@/, ':****@');
+    console.log(`🔌 Attempting to connect to: ${maskedUri}`);
+
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('✅ Connected to MongoDB');
     
@@ -103,6 +108,10 @@ const seedDB = async () => {
     process.exit(0);
   } catch (err) {
     console.error('❌ Error seeding database:', err);
+    if (err.code === 8000 || err.name === 'MongoServerError' || (err.errmsg && err.errmsg.includes('bad auth'))) {
+      console.error('\n💡 TIP: Authentication failed. Check your username and password in .env.');
+      console.error('   If your password has special characters (like @, !, #), they must be URL encoded (e.g., @ -> %40).');
+    }
     process.exit(1);
   }
 };
