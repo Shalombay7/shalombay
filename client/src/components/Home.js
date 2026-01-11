@@ -16,7 +16,7 @@ function Home() {
 
   useEffect(() => {
     axios
-      .get('/api/products/featured')
+      .get(`${API_URL}/api/products/featured`)
       .then(response => {
         const data = response.data;
         if (Array.isArray(data)) {
@@ -38,7 +38,7 @@ function Home() {
       });
 
     axios
-      .get('/api/ads')
+      .get(`${API_URL}/api/ads`)
       .then(response => {
         const data = response.data;
         if (Array.isArray(data)) {

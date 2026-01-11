@@ -7,6 +7,7 @@ function Cart() {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const API_URL = process.env.REACT_APP_API_URL || '';
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -15,7 +16,7 @@ function Cart() {
       setLoading(false);
       return;
     }
-    axios.get('/api/cart', { // Relative path
+    axios.get(`${API_URL}/api/cart`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => {

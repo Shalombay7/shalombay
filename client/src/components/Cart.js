@@ -7,6 +7,7 @@ import "../styles/custom.css";
 function Cart() {
   const [cart, setCart] = useState(null);
   const [error, setError] = useState("");
+  const API_URL = process.env.REACT_APP_API_URL || '';
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -14,7 +15,7 @@ function Cart() {
       setError("Please log in to view your cart.");
       return;
     }
-    axios.get(`${process.env.REACT_APP_API_URL}/api/cart`, {
+    axios.get(`${API_URL}/api/cart`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(response => setCart(response.data))

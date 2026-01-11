@@ -12,13 +12,19 @@ function Home() {
   const [category, setCategory] = useState('All');
   const [search, setSearch] = useState('');
   const userId = localStorage.getItem('userId') || '688a34e590fb103010b5f89d';
+  const API_URL = process.env.REACT_APP_API_URL || '';
 
   useEffect(() => {
-    // Use relative path for production compatibility
-    axios.get('/api/products/featured')
+    // Use absolute path if API_URL is defined
+    axios.get(`${API_URL}/api/products/featured`)
       .then(response => {
-        setProducts(response.data);
-        setFilteredProducts(response.data);
+        if (Array.isArray(response.data)) {
+          setProducts(response.data);
+          setFilteredProducts(response.data);
+        } else {
+          console.error('Unexpected response format:', response.data);
+          setProducts([]);
+        }
         setLoading(false);
       })
       .catch(error => {
@@ -27,7 +33,7 @@ function Home() {
         setLoading(false);
       });
 
-    axios.get('/api/ads')
+    axios.get(`${API_URL}/api/ads`)
       .then(response => setAds(response.data))
       .catch(error => console.error('Error fetching ads:', error));
   }, []);
@@ -57,7 +63,7 @@ function Home() {
         toast.error('This product is out of stock.');
         return;
       }
-      await axios.post(`/api/cart/${userId}`, {
+      await axios.post(`${API_URL}/api/cart/${userId}`, {
         productId,
         quantity: 1
       });
