@@ -9,7 +9,7 @@ function Cart() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    axios.get('http://localhost:5009/api/cart', {
+    axios.get('/api/cart', { // Relative path
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => setCart(res.data))
@@ -19,7 +19,7 @@ function Cart() {
   const handleCheckout = async () => {
     try {
       const token = localStorage.getItem('token');
-      const { data } = await axios.post('http://localhost:5009/api/payment/create-checkout-session', {}, {
+      const { data } = await axios.post('/api/payment/create-checkout-session', {}, { // Relative path
         headers: { Authorization: `Bearer ${token}` }
       });
       await stripe.redirectToCheckout({ sessionId: data.id });

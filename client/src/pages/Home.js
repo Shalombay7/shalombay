@@ -14,7 +14,8 @@ function Home() {
   const userId = localStorage.getItem('userId') || '688a34e590fb103010b5f89d';
 
   useEffect(() => {
-    axios.get('http://localhost:5009/api/products')
+    // Use relative path for production compatibility
+    axios.get('/api/products/featured')
       .then(response => {
         setProducts(response.data);
         setFilteredProducts(response.data);
@@ -26,7 +27,7 @@ function Home() {
         setLoading(false);
       });
 
-    axios.get('http://localhost:5009/api/ads')
+    axios.get('/api/ads')
       .then(response => setAds(response.data))
       .catch(error => console.error('Error fetching ads:', error));
   }, []);
@@ -56,7 +57,7 @@ function Home() {
         toast.error('This product is out of stock.');
         return;
       }
-      await axios.post(`http://localhost:5009/api/cart/${userId}`, {
+      await axios.post(`/api/cart/${userId}`, {
         productId,
         quantity: 1
       });
