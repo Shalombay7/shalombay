@@ -127,13 +127,7 @@ app.use((err, req, res, next) => {
 // Connect to MongoDB and Start Server
 const startServer = async () => {
   try {
-    let uri = process.env.MONGODB_URI;
-    // Auto-fix: Switch to 'shalombay' database if 'healthshop' is detected
-    if (uri && uri.includes('/healthshop')) {
-      console.log('🔄 Automatically switching database from "healthshop" to "shalombay"');
-      uri = uri.replace('/healthshop', '/shalombay');
-    }
-    await mongoose.connect(uri);
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log('✅ Connected to MongoDB');
     
     const PORT = process.env.PORT || 5009;

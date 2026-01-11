@@ -105,14 +105,8 @@ const seedDB = async () => {
       throw new Error('MONGODB_URI is undefined. Check your .env file location.');
     }
 
-    let uri = process.env.MONGODB_URI;
-    // Auto-fix: Switch to 'shalombay' database if 'healthshop' is detected
-    if (uri.includes('/healthshop')) {
-      console.log('🔄 Automatically switching database from "healthshop" to "shalombay"');
-      uri = uri.replace('/healthshop', '/shalombay');
-    }
-
     // Log masked URI for debugging
+    const uri = process.env.MONGODB_URI;
     const maskedUri = uri.replace(/:([^:@]+)@/, ':****@');
     console.log(`🔌 Attempting to connect to: ${maskedUri}`);
 
