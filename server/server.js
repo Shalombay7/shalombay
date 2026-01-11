@@ -72,14 +72,12 @@ try {
   const adminRoutes = require('./routes/admin');
   const productRoutes = require('./routes/products');
   const cartRoutes = require('./routes/cart');
-  const paymentRoutes = require('./routes/payment');
   const adRoutes = require('./routes/ads');
   
   app.use('/api/auth', authRoutes);
   app.use('/api/admin', adminRoutes);
   app.use('/api/products', productRoutes);
   app.use('/api/cart', cartRoutes);
-  app.use('/api/payment', paymentRoutes);
   app.use('/api/ads', adRoutes);
 } catch (error) {
   console.error('❌ Error loading route files:', error.message);
@@ -129,7 +127,13 @@ app.use((err, req, res, next) => {
 // Connect to MongoDB and Start Server
 const startServer = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    let uri = process.env.MONGODB_URI;
+    // Auto-fix: Switch to 'shalombay' database if 'healthshop' is detected
+    if (uri && uri.includes('/healthshop')) {
+      console.log('🔄 Automatically switching database from "healthshop" to "shalombay"');
+      uri = uri.replace('/healthshop', '/shalombay');
+    }
+    await mongoose.connect(uri);
     console.log('✅ Connected to MongoDB');
     
     const PORT = process.env.PORT || 5009;

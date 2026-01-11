@@ -158,13 +158,24 @@ function Home() {
                   <h5 className="card-title">{product.name}</h5>
                   <p className="card-text text-muted">{product.description}</p>
                   <p className="card-text"><strong>${product.price.toFixed(2)}</strong></p>
-                  <button
-                    className="btn btn-primary w-100"
-                    onClick={() => addToCart(product._id)}
-                    disabled={product.stock === 0}
-                  >
-                    <i className="bi bi-cart-plus"></i> Add to Cart
-                  </button>
+                  <div className="d-grid gap-2">
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => addToCart(product._id)}
+                      disabled={product.stock === 0}
+                    >
+                      <i className="bi bi-cart-plus"></i> Add to Cart
+                    </button>
+                    <button
+                      className="btn btn-success"
+                      onClick={() => {
+                        const msg = encodeURIComponent(`Hi, I want to buy ${product.name} for $${product.price}`);
+                        window.open(`https://wa.me/233542447318?text=${msg}`, '_blank');
+                      }}
+                    >
+                      <i className="bi bi-whatsapp"></i> Buy Now
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

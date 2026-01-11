@@ -65,6 +65,24 @@ const products = [
     stock: 110,
     imageUrl: "https://images.unsplash.com/photo-1577401239170-897942555fb3?auto=format&fit=crop&w=500&q=60",
     isFeatured: true
+  },
+  {
+    name: "Omega-3 Fish Oil",
+    description: "High potency EPA & DHA for heart and brain health.",
+    price: 29.99,
+    category: "Supplements",
+    stock: 75,
+    imageUrl: "https://images.unsplash.com/photo-1550572017-edd951aa8f72?auto=format&fit=crop&w=500&q=60",
+    isFeatured: true
+  },
+  {
+    name: "Probiotic Daily",
+    description: "50 Billion CFU for digestive and immune health.",
+    price: 34.50,
+    category: "Supplements",
+    stock: 50,
+    imageUrl: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=500&q=60",
+    isFeatured: false
   }
 ];
 
@@ -87,12 +105,22 @@ const seedDB = async () => {
       throw new Error('MONGODB_URI is undefined. Check your .env file location.');
     }
 
+    let uri = process.env.MONGODB_URI;
+    // Auto-fix: Switch to 'shalombay' database if 'healthshop' is detected
+    if (uri.includes('/healthshop')) {
+      console.log('🔄 Automatically switching database from "healthshop" to "shalombay"');
+      uri = uri.replace('/healthshop', '/shalombay');
+    }
+
     // Log masked URI for debugging
-    const uri = process.env.MONGODB_URI;
     const maskedUri = uri.replace(/:([^:@]+)@/, ':****@');
     console.log(`🔌 Attempting to connect to: ${maskedUri}`);
 
-    await mongoose.connect(process.env.MONGODB_URI);
+    // Extract and log database name
+    const dbName = uri.split('/').pop().split('?')[0];
+    console.log(`🎯 Target Database: ${dbName}`);
+
+    await mongoose.connect(uri);
     console.log('✅ Connected to MongoDB');
     
     await Product.deleteMany({});
