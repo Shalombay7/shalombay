@@ -9,12 +9,12 @@ router.get('/featured', async (req, res) => {
     let featuredProducts = await Product.find({ isFeatured: true }).limit(8).lean();
     
     // Fallback: If no featured products found, return the latest products
-    if (featuredProducts.length === 0) {
+    if (!featuredProducts || featuredProducts.length === 0) {
       console.log('⚠️ No featured products found, falling back to latest products');
       featuredProducts = await Product.find().sort({ createdAt: -1 }).limit(8).lean();
     }
     
-    console.log('✅ Featured products found:', featuredProducts.length, featuredProducts.map(p => p.name));
+    console.log('✅ Featured products found:', featuredProducts ? featuredProducts.length : 0);
     res.json(featuredProducts);
   } catch (error) {
     console.error('❌ Error fetching featured products:', error.message, error.stack);

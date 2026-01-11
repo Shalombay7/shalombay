@@ -8,7 +8,8 @@ const orderSchema = new mongoose.Schema({
       quantity: { type: Number, required: true, min: 1 }
     }
   ],
-  total: { type: Number, required: true, default: 0 }
+  total: { type: Number, required: true, default: 0 },
+  status: { type: String, default: 'cart', enum: ['cart', 'completed'] }
 });
 
 module.exports = mongoose.model('Order', orderSchema);
