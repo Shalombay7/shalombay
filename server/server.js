@@ -9,6 +9,10 @@ const rateLimit = require('express-rate-limit');
 
 // Load environment variables first
 dotenv.config();
+// Fallback: try loading from root if not found in server folder
+if (!process.env.MONGODB_URI) {
+  dotenv.config({ path: path.join(__dirname, '../.env') });
+}
 
 const app = express();
 
