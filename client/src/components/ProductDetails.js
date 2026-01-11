@@ -13,9 +13,10 @@ function ProductDetails() {
   const [rating, setRating] = useState(1);
   const [comment, setComment] = useState('');
   const defaultImage = 'https://placehold.co/400x400?text=No+Image';
+  const API_URL = process.env.REACT_APP_API_URL || '';
 
   useEffect(() => {
-    axios.get(`http://localhost:5009/api/products/${id}`)
+    axios.get(`${API_URL}/api/products/${id}`)
       .then(response => {
         setProduct(response.data);
         setLoading(false);
@@ -32,7 +33,7 @@ function ProductDetails() {
         setLoading(false);
       });
 
-    axios.get(`http://localhost:5009/api/reviews/product/${id}`)
+    axios.get(`${API_URL}/api/reviews/product/${id}`)
       .then(response => setReviews(response.data))
       .catch(error => console.error('Error fetching reviews:', error));
   }, [id]);
@@ -53,7 +54,7 @@ function ProductDetails() {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:5009/api/reviews', {
+      const response = await axios.post(`${API_URL}/api/reviews`, {
         productId: id,
         userId,
         rating,

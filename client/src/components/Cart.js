@@ -30,7 +30,7 @@ function Cart() {
       toast.error("Your cart is empty.");
       return;
     }
-    const message = `Order Details:\n${cart.items.map(item => `${item.product.name} - Quantity: ${item.quantity} - Price: $${item.product.price.toFixed(2)}`).join("\n")}\nTotal: $${cart.total.toFixed(2)}`;
+    const message = `Order Details:\n${cart.items.map(item => `${item.productId.name} - Quantity: ${item.quantity} - Price: $${item.productId.price.toFixed(2)}`).join("\n")}\nTotal: $${cart.total.toFixed(2)}`;
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/233542447318?text=${encodedMessage}`, "_blank");
   };
@@ -48,7 +48,7 @@ function Cart() {
           <ul className="list-group mb-3">
             {cart.items.map(item => (
               <li key={item._id} className="list-group-item">
-                {item.product.name} - Quantity: {item.quantity} - ${item.product.price.toFixed(2)}
+                {item.productId.name} - Quantity: {item.quantity} - ${item.productId.price.toFixed(2)}
               </li>
             ))}
           </ul>
