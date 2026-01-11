@@ -47,6 +47,24 @@ const products = [
     stock: 60,
     imageUrl: "https://images.unsplash.com/photo-1550572017-edd951aa8f72?auto=format&fit=crop&w=500&q=60",
     isFeatured: false
+  },
+  {
+    name: "Zinc Picolinate",
+    description: "Essential mineral for immune function and skin health.",
+    price: 12.99,
+    category: "Minerals",
+    stock: 90,
+    imageUrl: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=500&q=60",
+    isFeatured: false
+  },
+  {
+    name: "B-Complex Energy",
+    description: "Full spectrum B-vitamins for energy metabolism.",
+    price: 18.50,
+    category: "Vitamins",
+    stock: 110,
+    imageUrl: "https://images.unsplash.com/photo-1577401239170-897942555fb3?auto=format&fit=crop&w=500&q=60",
+    isFeatured: true
   }
 ];
 
