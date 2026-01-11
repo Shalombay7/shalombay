@@ -69,21 +69,18 @@ try {
   const productRoutes = require('./routes/products');
   const cartRoutes = require('./routes/cart');
   const paymentRoutes = require('./routes/payment');
+  const adRoutes = require('./routes/ads');
   
   app.use('/api/auth', authRoutes);
   app.use('/api/admin', adminRoutes);
   app.use('/api/products', productRoutes);
   app.use('/api/cart', cartRoutes);
   app.use('/api/payment', paymentRoutes);
+  app.use('/api/ads', adRoutes);
 } catch (error) {
   console.error('❌ Error loading route files:', error.message);
   // process.exit(1); // Don't crash if routes are missing, allows health check to pass
 }
-
-// Placeholder routes
-app.use('/api/ads', (req, res) => {
-  res.json([]); // Placeholder for ads
-});
 
 // Static files - serve these AFTER API routes
 app.use('/public', express.static(path.join(__dirname, 'public')));

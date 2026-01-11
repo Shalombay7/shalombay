@@ -31,7 +31,7 @@ function Cart() {
     }
     const message = `Order Details:\n${cart.items.map(item => `${item.product.name} - Quantity: ${item.quantity} - Price: $${item.product.price.toFixed(2)}`).join("\n")}\nTotal: $${cart.total.toFixed(2)}`;
     const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/+1234567890?text=${encodedMessage}`, "_blank");
+    window.open(`https://wa.me/233542447318?text=${encodedMessage}`, "_blank");
   };
 
   if (error) return <div className="alert alert-danger">{error}</div>;

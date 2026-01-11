@@ -21,8 +21,8 @@ function Footer() {
           <div className="col-md-4 mb-3">
             <h5>Contact Us</h5>
             <p className="mb-1">Email: support@shalombay.com</p>
-            <p className="mb-1">Phone: +1 (123) 456-7890</p>
-            <p className="mb-1">Address: 123 Health St, Wellness City, USA</p>
+            <p className="mb-1">Phone: +233542447318</p>
+            <p className="mb-1">Address: Kumasi-Ashanti Region</p>
           </div>
           {/* Premium Health Products Tag */}
           <div className="col-md-4 mb-3 text-center">

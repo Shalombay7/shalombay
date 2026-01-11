@@ -29,6 +29,9 @@ function Navbar() {
             <li className="nav-item">
               <Link className="nav-link" to="/about">About</Link>
             </li>
+            <li className="nav-item">
+              <a className="nav-link" href="https://wa.me/233542447318" target="_blank" rel="noopener noreferrer">Contact</a>
+            </li>
           </ul>
         </div>
       </div>

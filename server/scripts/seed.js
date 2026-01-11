@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
 const Product = require('../models/Product');
+const Ad = require('../models/Ad');
 
 // Load env vars
 dotenv.config({ path: path.join(__dirname, '../.env') });
@@ -49,6 +50,19 @@ const products = [
   }
 ];
 
+const ads = [
+  {
+    title: "Summer Sale",
+    description: "Get 20% off on all vitamins this summer!",
+    imageUrl: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=500&q=60"
+  },
+  {
+    title: "New Arrivals",
+    description: "Check out our latest organic protein powders.",
+    imageUrl: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=500&q=60"
+  }
+];
+
 const seedDB = async () => {
   try {
     if (!process.env.MONGODB_URI) {
@@ -61,7 +75,11 @@ const seedDB = async () => {
     await Product.deleteMany({});
     console.log('🗑️ Cleared existing products');
     
+    await Ad.deleteMany({});
+    console.log('🗑️ Cleared existing ads');
+
     await Product.insertMany(products);
+    await Ad.insertMany(ads);
     console.log('🌱 Products seeded successfully');
     
     process.exit(0);

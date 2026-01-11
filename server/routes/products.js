@@ -19,7 +19,7 @@ router.get('/featured', async (req, res) => {
     res.json(featuredProducts);
   } catch (error) {
     console.error('❌ Error fetching featured products:', error.message, error.stack);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: `Server error: ${error.message}`, error: error.message });
   }
 });
 
