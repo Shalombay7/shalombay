@@ -100,12 +100,21 @@ function Home() {
               {ads.length > 0 ? (
                 ads.map(ad => (
                   <div key={ad._id} className="col-md-6 mb-3">
-                    <img
-                      src={ad.imageUrl}
-                      className="img-fluid rounded"
-                      alt={ad.title}
-                    />
-                    <p className="mt-2 text-center">{ad.description}</p>
+                    <div 
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => {
+                        const msg = encodeURIComponent(`Hello, I'm interested in the special offer: ${ad.title || 'Special Offer'}\n\n${ad.description || ''}`);
+                        window.open(`https://wa.me/233542447318?text=${msg}`, '_blank');
+                      }}
+                    >
+                      <img
+                        src={ad.imageUrl}
+                        className="img-fluid rounded"
+                        alt={ad.title}
+                      />
+                      <p className="mt-2 text-center">{ad.description}</p>
+                      <div className="text-center"><button className="btn btn-sm btn-success"><i className="bi bi-whatsapp"></i> Inquire on WhatsApp</button></div>
+                    </div>
                   </div>
                 ))
               ) : (

@@ -38,6 +38,24 @@ function ProductDetails() {
       .catch(error => console.error('Error fetching reviews:', error));
   }, [id]);
 
+  const addToCart = async () => {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      toast.error('Please log in to add items to your cart.');
+      return;
+    }
+    try {
+      await axios.post(`${API_URL}/api/cart/${userId}`, {
+        productId: id,
+        quantity: quantity
+      });
+      toast.success('Added to cart!');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast.error('Failed to add to cart.');
+    }
+  };
+
   const orderViaWhatsApp = () => {
     const phoneNumber = '233542447318';
     const message = `Hello, I would like to order:\n\nProduct: ${product.name}\nPrice: $${product.price.toFixed(2)}\nQuantity: ${quantity}\n\nPlease confirm availability.`;
@@ -117,6 +135,13 @@ function ProductDetails() {
                   Select the quantity to add to cart.
                 </small>
               </div>
+              <button
+                className="btn btn-primary me-2"
+                onClick={addToCart}
+                disabled={product.stock === 0}
+              >
+                <i className="bi bi-cart-plus"></i> Add to Cart
+              </button>
               <button
                 className="btn btn-success"
                 onClick={orderViaWhatsApp}

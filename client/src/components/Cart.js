@@ -30,7 +30,11 @@ function Cart() {
       toast.error("Your cart is empty.");
       return;
     }
-    const message = `Order Details:\n${cart.items.map(item => `${item.productId.name} - Quantity: ${item.quantity} - Price: $${item.productId.price.toFixed(2)}`).join("\n")}\nTotal: $${cart.total.toFixed(2)}`;
+    const itemsList = cart.items.map(item => 
+      `- ${item.productId.name} (x${item.quantity} @ $${item.productId.price.toFixed(2)}): $${(item.productId.price * item.quantity).toFixed(2)}`
+    ).join('\n');
+    
+    const message = `Hello! I would like to place an order:\n\n${itemsList}\n\n*Total: $${cart.total.toFixed(2)}*\n\nPlease confirm my order.`;
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/233542447318?text=${encodedMessage}`, "_blank");
   };

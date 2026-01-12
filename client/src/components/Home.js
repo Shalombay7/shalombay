@@ -10,6 +10,7 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState('');
+  const userId = localStorage.getItem('userId');
 
   const defaultImage = 'https://placehold.co/200x200?text=No+Image';
   const API_URL = process.env.REACT_APP_API_URL || '';
@@ -64,9 +65,33 @@ function Home() {
     setFilteredProducts(filtered);
   }, [search, products]);
 
+  const addToCart = async (productId) => {
+    if (!userId) {
+      toast.error('Please log in to add items to your cart.');
+      return;
+    }
+    try {
+      await axios.post(`${API_URL}/api/cart/${userId}`, {
+        productId,
+        quantity: 1
+      });
+      toast.success('Added to cart!');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast.error('Failed to add to cart.');
+    }
+  };
+
   const orderViaWhatsApp = (product) => {
     const phoneNumber = '233542447318';
     const message = `Hello, I would like to order:\n\nProduct: ${product.name}\nPrice: $${product.price.toFixed(2)}\n\nPlease confirm availability.`;
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  };
+
+  const inquireAdViaWhatsApp = (ad) => {
+    const phoneNumber = '233542447318';
+    const message = `Hello, I'm interested in the special offer: ${ad.title || 'Special Offer'}\n\n${ad.description || ''}\n\nPlease provide more details.`;
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };
@@ -91,13 +116,22 @@ function Home() {
               {ads.length > 0 ? (
                 ads.map(ad => (
                   <div key={ad._id} className="col-md-6 mb-3">
-                    <img
-                      src={ad.imageUrl || defaultImage}
-                      className="img-fluid rounded"
-                      alt={ad.title || 'Special Offer'}
-                      onError={(e) => (e.target.src = defaultImage)}
-                    />
-                    <p className="mt-2 text-center">{ad.description || 'No description available'}</p>
+                    <div 
+                      style={{ cursor: 'pointer' }} 
+                      onClick={() => inquireAdViaWhatsApp(ad)}
+                      className="h-100"
+                    >
+                      <img
+                        src={ad.imageUrl || defaultImage}
+                        className="img-fluid rounded"
+                        alt={ad.title || 'Special Offer'}
+                        onError={(e) => (e.target.src = defaultImage)}
+                      />
+                      <p className="mt-2 text-center">{ad.description || 'No description available'}</p>
+                      <div className="text-center">
+                        <button className="btn btn-sm btn-success"><i className="bi bi-whatsapp"></i> Inquire on WhatsApp</button>
+                      </div>
+                    </div>
                   </div>
                 ))
               ) : (
@@ -155,6 +189,13 @@ function Home() {
                   <p className="card-text">
                     {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
                   </p>
+                  <button
+                    className="btn btn-primary w-100 mb-2"
+                    onClick={() => addToCart(product._id)}
+                    disabled={product.stock === 0}
+                  >
+                    <i className="bi bi-cart-plus"></i> Add to Cart
+                  </button>
                   <button
                     className="btn btn-success w-100"
                     onClick={() => orderViaWhatsApp(product)}

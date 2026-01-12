@@ -37,7 +37,7 @@ function Cart() {
     }
     
     const itemsList = cart.items.map(item => 
-      `- ${item.productId.name} (x${item.quantity}): $${(item.productId.price * item.quantity).toFixed(2)}`
+      `- ${item.productId.name} (x${item.quantity} @ $${item.productId.price.toFixed(2)}): $${(item.productId.price * item.quantity).toFixed(2)}`
     ).join('\n');
     
     const total = cart.total.toFixed(2);
