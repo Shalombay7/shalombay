@@ -34,7 +34,13 @@ function Home() {
       });
 
     axios.get(`${API_URL}/api/ads`)
-      .then(response => setAds(response.data))
+      .then(response => {
+        if (Array.isArray(response.data)) {
+          setAds(response.data);
+        } else {
+          setAds([]);
+        }
+      })
       .catch(error => console.error('Error fetching ads:', error));
   }, []);
 

@@ -131,9 +131,17 @@ const startServer = async () => {
     console.log('✅ Connected to MongoDB');
     
     const PORT = process.env.PORT || 5009;
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+    });
+
+    server.on('error', (e) => {
+      if (e.code === 'EADDRINUSE') {
+        console.error(`❌ Port ${PORT} is already in use.`);
+        console.error(`   Run this command to fix it: npx kill-port ${PORT}`);
+        process.exit(1);
+      }
     });
   } catch (err) {
     console.error('❌ Failed to connect to MongoDB:', err.message);
