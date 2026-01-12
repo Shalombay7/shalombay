@@ -31,10 +31,10 @@ function Cart() {
       return;
     }
     const itemsList = cart.items.map(item => 
-      `- ${item.productId.name} (x${item.quantity} @ $${item.productId.price.toFixed(2)}): $${(item.productId.price * item.quantity).toFixed(2)}`
+      `- ${item.productId.name} (x${item.quantity} @ GHS ${item.productId.price.toFixed(2)}): GHS ${(item.productId.price * item.quantity).toFixed(2)}`
     ).join('\n');
     
-    const message = `Hello! I would like to place an order:\n\n${itemsList}\n\n*Total: $${cart.total.toFixed(2)}*\n\nPlease confirm my order.`;
+    const message = `Hello! I would like to place an order:\n\n${itemsList}\n\n*Total: GHS ${cart.total.toFixed(2)}*\n\nPlease confirm my order.`;
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/233542447318?text=${encodedMessage}`, "_blank");
   };
@@ -52,11 +52,11 @@ function Cart() {
           <ul className="list-group mb-3">
             {cart.items.map(item => (
               <li key={item._id} className="list-group-item">
-                {item.productId.name} - Quantity: {item.quantity} - ${item.productId.price.toFixed(2)}
+                {item.productId.name} - Quantity: {item.quantity} - GHS {item.productId.price.toFixed(2)}
               </li>
             ))}
           </ul>
-          <h4>Total: ${cart.total.toFixed(2)}</h4>
+          <h4>Total: GHS {cart.total.toFixed(2)}</h4>
           <button className="btn btn-primary" onClick={handleWhatsAppCheckout}>
             Discuss Order on WhatsApp
           </button>

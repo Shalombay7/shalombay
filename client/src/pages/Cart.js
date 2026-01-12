@@ -37,12 +37,12 @@ function Cart() {
     }
     
     const itemsList = cart.items.map(item => 
-      `- ${item.productId.name} (x${item.quantity} @ $${item.productId.price.toFixed(2)}): $${(item.productId.price * item.quantity).toFixed(2)}`
+      `- ${item.productId.name} (x${item.quantity} @ GHS ${item.productId.price.toFixed(2)}): GHS ${(item.productId.price * item.quantity).toFixed(2)}`
     ).join('\n');
     
     const total = cart.total.toFixed(2);
     
-    const message = `Hello! I would like to place an order:\n\n${itemsList}\n\n*Total: $${total}*\n\nPlease confirm my order.`;
+    const message = `Hello! I would like to place an order:\n\n${itemsList}\n\n*Total: GHS ${total}*\n\nPlease confirm my order.`;
     
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/233542447318?text=${encodedMessage}`, "_blank");
@@ -78,15 +78,15 @@ function Cart() {
               <tr key={item._id}>
                 <td>{item.productId.name}</td>
                 <td>{item.quantity}</td>
-                <td>${item.productId.price.toFixed(2)}</td>
-                <td>${(item.productId.price * item.quantity).toFixed(2)}</td>
+                <td>GHS {item.productId.price.toFixed(2)}</td>
+                <td>GHS {(item.productId.price * item.quantity).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       <div className="d-flex justify-content-between align-items-center mt-4">
-        <h3>Total: ${cart.total.toFixed(2)}</h3>
+        <h3>Total: GHS {cart.total.toFixed(2)}</h3>
         <button className="btn btn-success btn-lg" onClick={handleWhatsAppCheckout}>
           <i className="bi bi-whatsapp me-2"></i> Checkout via WhatsApp
         </button>

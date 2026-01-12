@@ -111,6 +111,7 @@ function Home() {
                         src={ad.imageUrl}
                         className="img-fluid rounded"
                         alt={ad.title}
+                        loading="lazy"
                       />
                       <p className="mt-2 text-center">{ad.description}</p>
                       <div className="text-center"><button className="btn btn-sm btn-success"><i className="bi bi-whatsapp"></i> Inquire on WhatsApp</button></div>
@@ -173,12 +174,13 @@ function Home() {
                     className="card-img-top"
                     alt={product.name}
                     style={{ height: '200px', objectFit: 'cover' }}
+                    loading="lazy"
                   />
                 </Link>
                 <div className="card-body">
                   <h5 className="card-title">{product.name}</h5>
                   <p className="card-text text-muted">{product.description}</p>
-                  <p className="card-text"><strong>${product.price.toFixed(2)}</strong></p>
+                  <p className="card-text"><strong>GHS {product.price.toFixed(2)}</strong></p>
                   <div className="d-grid gap-2">
                     <button
                       className="btn btn-primary"
@@ -190,7 +192,7 @@ function Home() {
                     <button
                       className="btn btn-success"
                       onClick={() => {
-                        const msg = encodeURIComponent(`Hi, I want to buy ${product.name} for $${product.price}`);
+                        const msg = encodeURIComponent(`Hi, I want to buy ${product.name} for GHS ${product.price}`);
                         window.open(`https://wa.me/233542447318?text=${msg}`, '_blank');
                       }}
                     >

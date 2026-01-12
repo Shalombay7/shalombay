@@ -58,7 +58,7 @@ function ProductDetails() {
 
   const orderViaWhatsApp = () => {
     const phoneNumber = '233542447318';
-    const message = `Hello, I would like to order:\n\nProduct: ${product.name}\nPrice: $${product.price.toFixed(2)}\nQuantity: ${quantity}\n\nPlease confirm availability.`;
+    const message = `Hello, I would like to order:\n\nProduct: ${product.name}\nPrice: GHS ${product.price.toFixed(2)}\nQuantity: ${quantity}\n\nPlease confirm availability.`;
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };
@@ -115,7 +115,7 @@ function ProductDetails() {
             <div className="col-md-6">
               <h2 id="product-title">{product.name}</h2>
               <p className="text-muted">{product.description}</p>
-              <p><strong>Price: ${product.price.toFixed(2)}</strong></p>
+              <p><strong>Price: GHS {product.price.toFixed(2)}</strong></p>
               <p>Category: {product.category}</p>
               <p>Stock: {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}</p>
               <div className="mb-3">

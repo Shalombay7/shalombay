@@ -55,7 +55,7 @@ export default function AdminProducts() {
             {products.map((product) => (
               <tr key={product._id}>
                 <td>{product.name}</td>
-                <td>${product.price}</td>
+                <td>GHS {product.price}</td>
                 <td>{product.stock}</td>
                 <td>⭐ {product.rating}</td>
                 <td>

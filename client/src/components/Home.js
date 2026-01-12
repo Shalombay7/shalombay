@@ -84,7 +84,7 @@ function Home() {
 
   const orderViaWhatsApp = (product) => {
     const phoneNumber = '233542447318';
-    const message = `Hello, I would like to order:\n\nProduct: ${product.name}\nPrice: $${product.price.toFixed(2)}\n\nPlease confirm availability.`;
+    const message = `Hello, I would like to order:\n\nProduct: ${product.name}\nPrice: GHS ${product.price.toFixed(2)}\n\nPlease confirm availability.`;
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };
@@ -126,6 +126,7 @@ function Home() {
                         className="img-fluid rounded"
                         alt={ad.title || 'Special Offer'}
                         onError={(e) => (e.target.src = defaultImage)}
+                        loading="lazy"
                       />
                       <p className="mt-2 text-center">{ad.description || 'No description available'}</p>
                       <div className="text-center">
@@ -180,12 +181,13 @@ function Home() {
                     alt={product.name}
                     style={{ height: '200px', objectFit: 'cover' }}
                     onError={(e) => (e.target.src = defaultImage)}
+                    loading="lazy"
                   />
                 </Link>
                 <div className="card-body">
                   <h5 className="card-title">{product.name}</h5>
                   <p className="card-text text-muted">{product.description}</p>
-                  <p className="card-text"><strong>${product.price.toFixed(2)}</strong></p>
+                  <p className="card-text"><strong>GHS {product.price.toFixed(2)}</strong></p>
                   <p className="card-text">
                     {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
                   </p>
