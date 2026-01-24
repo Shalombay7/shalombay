@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { getCart, clearCart } from './CartUtils';
+import { getCart, clearCart, syncCart } from './CartUtils';
 
 function Checkout() {
   const [name, setName] = useState('');
@@ -58,7 +58,13 @@ function Checkout() {
 
         <div className="mb-3">
           <label className="form-label">Phone Number</label>
-          <input className="form-control" placeholder="054xxxxxxx" value={phone} onChange={e => setPhone(e.target.value)} />
+          <input 
+            className="form-control" 
+            placeholder="054xxxxxxx" 
+            value={phone} 
+            onChange={e => setPhone(e.target.value)} 
+            onBlur={() => syncCart(phone)}
+          />
         </div>
 
         <div className="mb-3">

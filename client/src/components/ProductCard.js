@@ -29,10 +29,10 @@ const ProductCard = ({ product, onAddToCart, onWhatsApp, defaultImage }) => (
 
       <button
         className="btn btn-primary w-100 mb-2"
-        onClick={() => onAddToCart(product._id)}
+        onClick={() => onAddToCart(product)}
         disabled={product.stock === 0}
       >
-        Add to Cart
+        🛒 Add to Cart
       </button>
 
       <button

@@ -66,8 +66,7 @@ function Home() {
   }, [search, products]);
 
   /* ===================== ACTIONS ===================== */
-  const addToCart = async (productId) => {
-    const product = products.find(p => p._id === productId);
+  const addToCart = (product) => {
     if (product) {
       addToLocalCart(product);
       toast.success('Added to cart!');

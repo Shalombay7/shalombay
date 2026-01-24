@@ -52,10 +52,9 @@ function ProductDetails() {
     }
   };
 
-  const addRelatedToCart = (productId) => {
-    const prod = relatedProducts.find(p => p._id === productId);
-    if (prod) {
-      addToLocalCart(prod);
+  const addRelatedToCart = (product) => {
+    if (product) {
+      addToLocalCart(product);
       toast.success('Added to cart!');
     }
   };
@@ -93,7 +92,7 @@ function ProductDetails() {
             onClick={addToCart}
             disabled={product.stock === 0}
           >
-            Add to Cart
+            🛒 Add to Cart
           </button>
 
           <a
