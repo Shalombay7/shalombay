@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/custom.css";
-import { getCart } from "../utils/cart";
+import { getCart } from "./CartUtils";
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);

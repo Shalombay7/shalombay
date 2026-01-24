@@ -4,7 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import ReviewList from './ReviewList';
 import AddReview from './AddReview';
-import { addToCart as addToLocalCart } from '../utils/cart';
+import { addToCart as addToLocalCart } from './CartUtils';
 
 function ProductDetails() {
   const { id } = useParams();

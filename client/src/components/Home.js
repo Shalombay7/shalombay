@@ -8,7 +8,7 @@ import SearchBar from './SearchBar';
 import ProductCard from './ProductCard';
 import FloatingWhatsApp from './FloatingWhatsApp';
 import SpecialOffers from './SpecialOffers';
-import { addToCart as addToLocalCart, getCart } from '../utils/cart';
+import { addToCart as addToLocalCart, getCart } from './CartUtils';
 
 function Home() {
   const [products, setProducts] = useState([]);

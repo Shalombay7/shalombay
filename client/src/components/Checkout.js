@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { getCart, clearCart } from '../utils/cart';
+import { getCart, clearCart } from './CartUtils';
 
 function Checkout() {
   const [name, setName] = useState('');
