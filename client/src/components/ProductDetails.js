@@ -5,11 +5,13 @@ import { toast } from 'react-toastify';
 import ReviewList from './ReviewList';
 import AddReview from './AddReview';
 import { addToCart as addToLocalCart } from './CartUtils';
+import ProductCard from './ProductCard';
 
 function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const API_URL = process.env.REACT_APP_API_URL || '';
   const defaultImage = 'https://placehold.co/400x400?text=No+Image';
 
@@ -25,6 +27,15 @@ function ProductDetails() {
           axios.get(`${API_URL}/api/reviews/product/${id}`)
             .then(revRes => setReviews(revRes.data))
             .catch(() => setReviews([]));
+
+          // Fetch related products (simple client-side filtering)
+          axios.get(`${API_URL}/api/products`)
+            .then(allRes => {
+              const related = allRes.data
+                .filter(p => p.category === res.data.category && p._id !== res.data._id)
+                .slice(0, 4);
+              setRelatedProducts(related);
+            });
         }
       })
       .catch(err => console.error(err));
@@ -34,11 +45,25 @@ function ProductDetails() {
     fetchProductData();
   }, [id]);
 
-  const addToCart = async () => {
+  const addToCart = () => {
     if (product) {
       addToLocalCart(product);
       toast.success('Added to cart!');
     }
+  };
+
+  const addRelatedToCart = (productId) => {
+    const prod = relatedProducts.find(p => p._id === productId);
+    if (prod) {
+      addToLocalCart(prod);
+      toast.success('Added to cart!');
+    }
+  };
+
+  const orderViaWhatsApp = (p) => {
+    const phone = '233542447318';
+    const message = `Hello, I would like to order:\n\nProduct: ${p.name}\nPrice: GHS ${p.price.toFixed(2)}\n\nPlease confirm availability.`;
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   if (!product) return <p className="text-center mt-5">Loading...</p>;
@@ -72,7 +97,7 @@ function ProductDetails() {
           </button>
 
           <a
-            href={`https://wa.me/233542447318?text=I want to order ${product.name}`}
+            href={`https://wa.me/233542447318?text=${encodeURIComponent(`I want to order ${product.name}`)}`}
             className="btn btn-success w-100"
             target="_blank"
             rel="noopener noreferrer"
@@ -85,6 +110,24 @@ function ProductDetails() {
           <AddReview productId={id} onReviewAdded={fetchProductData} />
         </div>
       </div>
+
+      {relatedProducts.length > 0 && (
+        <div className="mt-5">
+          <h3 className="mb-4">Related Products</h3>
+          <div className="row">
+            {relatedProducts.map(rp => (
+              <div key={rp._id} className="col-6 col-md-3 mb-4">
+                <ProductCard 
+                  product={rp}
+                  defaultImage={defaultImage}
+                  onAddToCart={addRelatedToCart}
+                  onWhatsApp={orderViaWhatsApp}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
