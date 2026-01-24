@@ -73,12 +73,16 @@ try {
   const productRoutes = require('./routes/products');
   const cartRoutes = require('./routes/cart');
   const adRoutes = require('./routes/ads');
+  const orderRoutes = require('./routes/orders');
+  const reviewRoutes = require('./routes/reviews');
   
   app.use('/api/auth', authRoutes);
   app.use('/api/admin', adminRoutes);
   app.use('/api/products', productRoutes);
   app.use('/api/cart', cartRoutes);
   app.use('/api/ads', adRoutes);
+  app.use('/api/orders', orderRoutes);
+  app.use('/api/reviews', reviewRoutes);
 } catch (error) {
   console.error('❌ Error loading route files:', error.message);
   // process.exit(1); // Don't crash if routes are missing, allows health check to pass

@@ -2,216 +2,154 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Helmet } from 'react-helmet-async';
+import HeroSection from './HeroSection';
+import SearchBar from './SearchBar';
+import ProductCard from './ProductCard';
+import FloatingWhatsApp from './FloatingWhatsApp';
+import SpecialOffers from './SpecialOffers';
+import { addToCart as addToLocalCart, getCart } from '../utils/cart';
 
 function Home() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [ads, setAds] = useState([]); // Initialize as empty array
+  const [ads, setAds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState('');
-  const userId = localStorage.getItem('userId');
+  const [cartCount, setCartCount] = useState(0);
 
-  const defaultImage = 'https://placehold.co/200x200?text=No+Image';
   const API_URL = process.env.REACT_APP_API_URL || '';
+  const defaultImage = 'https://placehold.co/400x400?text=No+Image';
 
+  /* ===================== FETCH DATA ===================== */
   useEffect(() => {
     axios
       .get(`${API_URL}/api/products/featured`)
-      .then(response => {
-        const data = response.data;
-        if (Array.isArray(data)) {
-          setProducts(data);
-          setFilteredProducts(data);
-        } else {
-          console.warn('Unexpected response format for featured products:', data);
-          setProducts([]);
-          setFilteredProducts([]);
+      .then(res => {
+        if (Array.isArray(res.data)) {
+          setProducts(res.data);
+          setFilteredProducts(res.data);
         }
         setLoading(false);
       })
-      .catch(error => {
-        console.error('Error fetching featured products:', error);
-        setError(error.response ? error.response.data.message : 'Network error: Unable to connect to the server.');
-        setProducts([]);
-        setFilteredProducts([]);
+      .catch(err => {
+        setError('Failed to load products.');
         setLoading(false);
       });
 
     axios
       .get(`${API_URL}/api/ads`)
-      .then(response => {
-        const data = response.data;
-        if (Array.isArray(data)) {
-          setAds(data);
-        } else {
-          console.warn('Unexpected response format for ads:', data);
-          setAds([]); // Default to empty array if not an array
-        }
+      .then(res => {
+        if (Array.isArray(res.data)) setAds(res.data);
       })
-      .catch(error => {
-        console.error('Error fetching ads:', error);
-        setAds([]); // Fallback on error
-      });
+      .catch(() => setAds([]));
   }, []);
 
+  /* ===================== CART COUNT ===================== */
+  useEffect(() => {
+    const updateCount = () => setCartCount(getCart().reduce((acc, item) => acc + item.quantity, 0));
+    updateCount();
+    window.addEventListener('cartUpdated', updateCount);
+    return () => window.removeEventListener('cartUpdated', updateCount);
+  }, []);
+
+  /* ===================== SEARCH ===================== */
   useEffect(() => {
     let filtered = [...products];
     if (search) {
-      filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(search.toLowerCase())
+      filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(search.toLowerCase())
       );
     }
     setFilteredProducts(filtered);
   }, [search, products]);
 
+  /* ===================== ACTIONS ===================== */
   const addToCart = async (productId) => {
-    if (!userId) {
-      toast.error('Please log in to add items to your cart.');
-      return;
-    }
-    try {
-      await axios.post(`${API_URL}/api/cart/${userId}`, {
-        productId,
-        quantity: 1
-      });
+    const product = products.find(p => p._id === productId);
+    if (product) {
+      addToLocalCart(product);
       toast.success('Added to cart!');
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      toast.error('Failed to add to cart.');
     }
   };
 
   const orderViaWhatsApp = (product) => {
-    const phoneNumber = '233542447318';
-    const message = `Hello, I would like to order:\n\nProduct: ${product.name}\nPrice: GHS ${product.price.toFixed(2)}\n\nPlease confirm availability.`;
-    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    const phone = '233542447318';
+    const message = `Hello, I would like to order:\n\nProduct: ${product.name}\nPrice: GHS ${product.price.toFixed(
+      2
+    )}\n\nPlease confirm availability.`;
+    window.open(
+      `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
+      '_blank'
+    );
   };
 
   const inquireAdViaWhatsApp = (ad) => {
-    const phoneNumber = '233542447318';
-    const message = `Hello, I'm interested in the special offer: ${ad.title || 'Special Offer'}\n\n${ad.description || ''}\n\nPlease provide more details.`;
-    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    const phone = '233542447318';
+    const message = `Hello, I'm interested in this offer:\n\n${
+      ad.title || 'Special Offer'
+    }\n${ad.description || ''}`;
+    window.open(
+      `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
+      '_blank'
+    );
   };
 
+  /* ===================== UI ===================== */
   return (
     <div className="container mt-4" role="main">
-      <div className="p-5 mb-4 bg-primary text-white rounded-3">
-        <h1 className="display-4">Welcome to Shalom Bay</h1>
-        <p className="lead">Your one-stop shop for quality products. Reach us on WhatsApp: +233542447318</p>
-        <a href="#featured-products" className="btn btn-light btn-lg">
-          <i className="bi bi-bag"></i> Shop Now
-        </a>
-      </div>
+      <Helmet>
+        <title>Shalom Bay | Health Supplements in Ghana</title>
+        <meta
+          name="description"
+          content="Buy vitamins, protein, and wellness supplements in Ghana. Trusted health products with fast delivery."
+        />
+      </Helmet>
 
-      <div className="mb-4">
-        <div className="card">
-          <div className="card-header bg-secondary text-white">
-            <h5 className="mb-0">Special Offers</h5>
-          </div>
-          <div className="card-body">
-            <div className="row">
-              {ads.length > 0 ? (
-                ads.map(ad => (
-                  <div key={ad._id} className="col-md-6 mb-3">
-                    <div 
-                      style={{ cursor: 'pointer' }} 
-                      onClick={() => inquireAdViaWhatsApp(ad)}
-                      className="h-100"
-                    >
-                      <img
-                        src={ad.imageUrl || defaultImage}
-                        className="img-fluid rounded"
-                        alt={ad.title || 'Special Offer'}
-                        onError={(e) => (e.target.src = defaultImage)}
-                        loading="lazy"
-                      />
-                      <p className="mt-2 text-center">{ad.description || 'No description available'}</p>
-                      <div className="text-center">
-                        <button className="btn btn-sm btn-success"><i className="bi bi-whatsapp"></i> Inquire on WhatsApp</button>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p>No special offers available.</p>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* ===================== HERO ===================== */}
+      <HeroSection />
 
-      <div className="row mb-4">
-        <div className="col-12">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search products..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            aria-label="Search products"
-          />
-        </div>
-      </div>
+      {/* ===================== SPECIAL OFFERS ===================== */}
+      <SpecialOffers 
+        ads={ads} 
+        defaultImage={defaultImage} 
+        onInquire={inquireAdViaWhatsApp} 
+      />
 
-      <h2 className="my-4" id="featured-products">Featured Products</h2>
+      {/* ===================== SEARCH ===================== */}
+      <SearchBar value={search} onChange={(e) => setSearch(e.target.value)} />
+
+      {/* ===================== PRODUCTS ===================== */}
+      <h2 className="fw-bold mb-4" id="featured-products">
+        Featured Products
+      </h2>
+
       {loading ? (
-        <div className="text-center" aria-busy="true">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
+        <div className="text-center">
+          <div className="spinner-border text-primary"></div>
         </div>
       ) : error ? (
-        <div className="alert alert-danger" role="alert">
-          {error}
-        </div>
-      ) : !Array.isArray(filteredProducts) || filteredProducts.length === 0 ? (
+        <div className="alert alert-danger">{error}</div>
+      ) : filteredProducts.length === 0 ? (
         <p>No products found.</p>
       ) : (
-        <div className="row" aria-labelledby="featured-products">
+        <div className="row">
           {filteredProducts.map(product => (
-            <div key={product._id} className="col-md-4 col-sm-6 mb-4">
-              <div className="card h-100 shadow-sm">
-                <Link to={`/product/${product._id}`}>
-                  <img
-                    src={product.imageUrl || defaultImage}
-                    className="card-img-top"
-                    alt={product.name}
-                    style={{ height: '200px', objectFit: 'cover' }}
-                    onError={(e) => (e.target.src = defaultImage)}
-                    loading="lazy"
-                  />
-                </Link>
-                <div className="card-body">
-                  <h5 className="card-title">{product.name}</h5>
-                  <p className="card-text text-muted">{product.description}</p>
-                  <p className="card-text"><strong>GHS {product.price.toFixed(2)}</strong></p>
-                  <p className="card-text">
-                    {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
-                  </p>
-                  <button
-                    className="btn btn-primary w-100 mb-2"
-                    onClick={() => addToCart(product._id)}
-                    disabled={product.stock === 0}
-                  >
-                    <i className="bi bi-cart-plus"></i> Add to Cart
-                  </button>
-                  <button
-                    className="btn btn-success w-100"
-                    onClick={() => orderViaWhatsApp(product)}
-                    disabled={product.stock === 0}
-                    aria-disabled={product.stock === 0}
-                  >
-                    <i className="bi bi-whatsapp"></i> Order via WhatsApp
-                  </button>
-                </div>
-              </div>
+            <div key={product._id} className="col-6 col-md-4 mb-4">
+              <ProductCard
+                product={product}
+                defaultImage={defaultImage}
+                onAddToCart={addToCart}
+                onWhatsApp={orderViaWhatsApp}
+              />
             </div>
           ))}
         </div>
       )}
+
+      {/* ===================== FLOATING WHATSAPP ===================== */}
+      <FloatingWhatsApp />
     </div>
   );
 }

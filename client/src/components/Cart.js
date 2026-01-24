@@ -1,65 +1,50 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import "../styles/custom.css";
+import { getCart } from "../utils/cart";
 
 function Cart() {
-  const [cart, setCart] = useState(null);
-  const [error, setError] = useState("");
-  const API_URL = process.env.REACT_APP_API_URL || '';
+  const [cartItems, setCartItems] = useState([]);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setError("Please log in to view your cart.");
-      return;
-    }
-    axios.get(`${API_URL}/api/cart`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(response => setCart(response.data))
-      .catch(err => {
-        setError("Failed to load cart.");
-        toast.error("Failed to load cart.");
-      });
-  }, []);
-
-  const handleWhatsAppCheckout = () => {
-    if (!cart || cart.items.length === 0) {
-      toast.error("Your cart is empty.");
-      return;
-    }
-    const itemsList = cart.items.map(item => 
-      `- ${item.productId.name} (x${item.quantity} @ GHS ${item.productId.price.toFixed(2)}): GHS ${(item.productId.price * item.quantity).toFixed(2)}`
-    ).join('\n');
+    const items = getCart();
+    setCartItems(items);
+    const t = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    setTotal(t);
     
-    const message = `Hello! I would like to place an order:\n\n${itemsList}\n\n*Total: GHS ${cart.total.toFixed(2)}*\n\nPlease confirm my order.`;
-    const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/233542447318?text=${encodedMessage}`, "_blank");
-  };
-
-  if (error) return <div className="alert alert-danger">{error}</div>;
-  if (!cart) return <div>Loading...</div>;
+    const handleUpdate = () => {
+      const updatedItems = getCart();
+      setCartItems(updatedItems);
+      setTotal(updatedItems.reduce((acc, item) => acc + (item.price * item.quantity), 0));
+    };
+    
+    window.addEventListener('cartUpdated', handleUpdate);
+    return () => window.removeEventListener('cartUpdated', handleUpdate);
+  }, []);
 
   return (
     <div className="container mt-5">
       <h2>Your Cart</h2>
-      {cart.items.length === 0 ? (
+      {cartItems.length === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
         <>
           <ul className="list-group mb-3">
-            {cart.items.map(item => (
-              <li key={item._id} className="list-group-item">
-                {item.productId.name} - Quantity: {item.quantity} - GHS {item.productId.price.toFixed(2)}
+            {cartItems.map((item, index) => (
+              <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>{item.name}</strong>
+                  <div className="text-muted small">Quantity: {item.quantity}</div>
+                </div>
+                <span>GHS {(item.price * item.quantity).toFixed(2)}</span>
               </li>
             ))}
           </ul>
-          <h4>Total: GHS {cart.total.toFixed(2)}</h4>
-          <button className="btn btn-primary" onClick={handleWhatsAppCheckout}>
-            Discuss Order on WhatsApp
-          </button>
+          <h4>Total: GHS {total.toFixed(2)}</h4>
+          <Link to="/checkout" className="btn btn-primary mt-3">
+            Proceed to Checkout
+          </Link>
         </>
       )}
     </div>
