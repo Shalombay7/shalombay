@@ -1,67 +1,33 @@
 const express = require('express');
 const router = express.Router();
-const Order = require('../models/Order');
-const Product = require('../models/Product');
-const auth = require('../middleware/auth');
+const Cart = require('../models/Cart');
 
-// Get logged-in user's cart (uses token)
-router.get('/', auth, async (req, res) => {
+// Save cart
+router.post('/save', async (req, res) => {
   try {
-    const cart = await Order.findOne({ userId: req.user.userId, status: 'cart' })
-      .populate('items.productId');
-    res.json(cart || { items: [], total: 0 });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { phone, items } = req.body;
+    if (!phone) return res.status(400).json({ message: 'Phone number required' });
+
+    await Cart.findOneAndUpdate(
+      { phone },
+      { items, updatedAt: new Date() },
+      { upsert: true, new: true }
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// Get user's cart
-router.get('/:userId', async (req, res) => {
+// Load cart
+router.get('/:phone', async (req, res) => {
   try {
-    const cart = await Order.findOne({ userId: req.params.userId, status: 'cart' })
-      .populate('items.productId');
-    res.json(cart || { items: [], total: 0 });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// Add item to cart
-router.post('/:userId', async (req, res) => {
-  const { productId, quantity } = req.body;
-  const userId = req.params.userId;
-
-  try {
-    let cart = await Order.findOne({ userId, status: 'cart' });
-    const product = await Product.findById(productId);
-
-    if (!product) return res.status(404).json({ message: 'Product not found' });
-
-    if (!cart) {
-      // Create new cart
-      cart = new Order({
-        userId,
-        items: [{ productId, quantity }],
-        total: product.price * quantity
-      });
-    } else {
-      // Update existing cart
-      const itemIndex = cart.items.findIndex(p => p.productId.toString() === productId);
-
-      if (itemIndex > -1) {
-        cart.items[itemIndex].quantity += quantity;
-      } else {
-        cart.items.push({ productId, quantity });
-      }
-      
-      // Recalculate total (simplified)
-      cart.total += product.price * quantity;
-    }
-
-    await cart.save();
-    res.status(200).json(cart);
-  } catch (error) {
-    console.error('Cart error:', error);
+    const cart = await Cart.findOne({ phone: req.params.phone });
+    res.json(cart?.items || []);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
 });
