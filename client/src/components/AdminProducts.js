@@ -6,11 +6,12 @@ export default function AdminProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const API_URL = process.env.REACT_APP_API_URL || '';
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const checkResponse = await fetch('/api/admin/check', {
+        const checkResponse = await fetch(`${API_URL}/api/admin/check`, {
           credentials: 'include',
         });
         const checkData = await checkResponse.json();
@@ -20,7 +21,7 @@ export default function AdminProducts() {
           return;
         }
 
-        const response = await fetch('/api/products', {
+        const response = await fetch(`${API_URL}/api/products`, {
           credentials: 'include',
         });
         const data = await response.json();

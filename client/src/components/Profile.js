@@ -11,19 +11,7 @@ function Profile() {
   const userId = localStorage.getItem('userId');
 
   useEffect(() => {
-    if (!userId) {
-      navigate('/login');
-      return;
-    }
-    axios.get(`${process.env.REACT_APP_API_URL}/api/auth/profile/${userId}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    })
-      .then(response => setUser(response.data))
-      .catch(err => {
-        console.error('Profile error:', err);
-        setError(err.response?.data?.message || 'Failed to load profile.');
-        toast.error(err.response?.data?.message || 'Failed to load profile.');
-      });
+    navigate('/');
   }, [userId, navigate]);
 
   const handleLogout = () => {

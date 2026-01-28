@@ -1,5 +1,18 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getCart, saveCart } from '../utils/cart';
+
+const CART_KEY = 'shalombay_cart';
+
+const getCart = () => {
+  try {
+    return JSON.parse(localStorage.getItem(CART_KEY)) || [];
+  } catch (e) {
+    return [];
+  }
+};
+
+const saveCart = (cart) => {
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+};
 
 const CartContext = createContext();
 
@@ -19,7 +32,7 @@ export const CartProvider = ({ children }) => {
       const index = prev.findIndex(i => i._id === product._id);
       if (index > -1) {
         const updated = [...prev];
-        updated[index].qty += 1;
+        updated[index] = { ...updated[index], qty: updated[index].qty + 1 };
         return updated;
       }
       return [...prev, { ...product, qty: 1 }];
